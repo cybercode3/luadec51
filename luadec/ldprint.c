@@ -1895,8 +1895,10 @@ char* ProcessCode(const Proto * f, int indent)
                /*
                 * constant boolean value
                 */
-               pc = dest - 2;
-            } else if (sbc == 0) {
+               if (dest > pc + 1) {
+                  pc = dest - 2;
+               }
+            } else if (sbc == 0 || dest <= pc + 1) {
                /* dummy jump -- ignore it */
                break;
             } else {
@@ -1920,7 +1922,9 @@ char* ProcessCode(const Proto * f, int indent)
                if (F->indent > baseIndent) {
                   StringBuffer_printf(str, "do return end");
                } else {
-                  pc = dest-2;
+                  if (dest > pc + 1) {
+                     pc = dest-2;
+                  }
                }
                TRY(AddStatement(F, str));
             }
